@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sevgilime Özel 💖</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-top: 50px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+        .counter {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 24px;
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10%); opacity: 1; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+        .message {
+            font-size: 1.8rem;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .punch-button {
+            margin-top: 20px;
+            cursor: pointer;
+            background: #fff;
+            color: #ee9ca7;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            border: none;
+            transition: 0.3s;
+        }
+        .punch-button:hover {
+            background: #ff69b4;
+            color: #fff;
+        }
+        .photo-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .erool {
+            max-width: 80%;
+            height: auto;
+            border-radius: 15px;
+            border: 3px solid #fff;
+            cursor: pointer;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .shake-photo {
+            animation: shake 0.5s;
+        }
+        #punch-image {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: auto;
+            z-index: 10;
+        }
+        @keyframes punch-animation {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+        #punch-image.active {
+            animation: punch-animation 0.3s ease-out;
+        }
+        .popup-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            color: #ee9ca7;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 100;
+        }
+        .popup-message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>💖 sana özel askımm 💖</h1>
+    <div class="counter" id="counter"></div>
+    
+    <div class="photo-container">
+        <img src="1213.jpg.webp" alt="Eklemek istediğin fotoğrafın açıklaması" class="erool">
+        <img id="punch-image" src="yumruk.jpg.png" alt="Yumruk">
+    </div>
+
+    <div class="message">Seni çok seviyorum! 💕</div>
+
+    <button class="punch-button" onclick="punchMe()">Bana Yumruk At 😅</button>
+    <button class="punch-button" onclick="punchMe2()">Bana İkinci Kez Vur 🤪</button>
+    
+    <button class="punch-button" onclick="playMusic()">Müziği Başlat 🎶</button>
+
+    <div class="hearts" id="hearts"></div>
+    
+    <div id="popup-message" class="popup-message"></div>
+
+    <iframe id="video-player" width="0" height="0" src="https://www.youtube.com/embed/ajaqqe-kllc?autoplay=1&loop=1&playlist=ajaqqe-kllc" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+
+    <script>
+        const startDate = new Date("2023-07-10");
+        const counter = document.getElementById("counter");
+        function updateCounter() {
+            const today = new Date();
+            const diff = today - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            counter.innerHTML = `Tanışalı ${days} gün oldu 💞`;
+        }
+        updateCounter();
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            heart.innerText = "💖";
+            document.getElementById("hearts").appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 500);
+
+        function showPopup(message) {
+            const popup = document.getElementById('popup-message');
+            popup.innerText = message;
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+        
+        // MÜZİĞİ BAŞLATAN FONKSİYON
+        function playMusic() {
+            const iframe = document.getElementById('video-player');
+            iframe.src = iframe.src;
+            showPopup("Müzik Başladı! 🎵");
+        }
+
+        function showPunch() {
+            const punchImage = document.getElementById('punch-image');
+            
+            punchImage.classList.remove('active');
+            void punchImage.offsetWidth;
+            punchImage.classList.add('active');
+            
+            punchImage.style.display = 'block';
+
+            setTimeout(() => {
+                punchImage.style.display = 'none';
+            }, 500);
+        }
+
+        function shakePhoto() {
+            const photo = document.querySelector('.erool');
+            photo.classList.remove('shake-photo');
+            void photo.offsetWidth;
+            photo.classList.add('shake-photo');
+        }
+
+        function punchMe() {
+            showPopup("Ahh! Ama yine de seni seviyorum 😘");
+            showPunch();
+            shakePhoto();
+        }
+
+        function punchMe2() {
+            showPopup("Ah, yine mi? Bu sefer kalbim kırıldı 💔");
+            showPunch();
+            shakePhoto();
+        }
+    </script>
+</body>
+</html>
